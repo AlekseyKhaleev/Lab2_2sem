@@ -5,40 +5,39 @@
 #include <fstream>
 #include <string>
 
-int main(int argc, char** argv) {
-    if (CorrectSyntax(argc,argv)){
+int main(int argc, char **argv) {
+    if (!CorrectSyntax(argc, argv)) {
         errno = 0;  // Переменная модуля errno.h, хранящая целочисленный код последней ошибки. 0 - отсутствие ошибок
-        std::set_new_handler(NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
+        std::set_new_handler(
+                NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
         try {
             if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
                 RaiseHelpScreen("error");
-            } else{
+            } else {
                 if (std::string(argv[1]) == "-c") {
-                    std::ofstream table_out(argv[3], std::ios::out | std::ios::binary );
-                    if(!table_out) {
+                    std::ofstream table_out(argv[3], std::ios::out | std::ios::binary);
+                    if (!table_out) {
                         std::cout << "Cannot open file.\n";
                         return 1;
                     }
                     int n = std::stoi(argv[2]);
-                    if (n > 0) {
-                        table_out.write((char *) &CORRECT_BIT, sizeof(unsigned long));
-                        table_out.write((char *) &n, sizeof(int));
-                        auto ParkUpdate = new structs::PC[n];
-                        DrawFrame(n + 1);
-                        DrawHead();
-                        for (int i = 0; i < n; i++) {
-                            ParkUpdate[i].set(i);
-                            table_out.write((char *) &ParkUpdate[i], sizeof(struct structs::PC));
-                        }
-                        std::cin.get();
-                        table_out.close();
-                        if (table_out.is_open() != 0) {
-                            std::cout
-                                    << "Ошибка закрытия файла\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
-                            exit(1);                                    // завершаем программу с кодом 1
-                        }
-                        delete[] ParkUpdate;
+                    table_out.write((char *) &CORRECT_BIT, sizeof(CORRECT_BIT));
+                    table_out.write((char *) &n, sizeof(int));
+                    auto ParkUpdate = new structs::PC[n];
+                    DrawFrame(n + 1);
+                    DrawHead();
+                    for (int i = 0; i < n; i++) {
+                        ParkUpdate[i].set(i);
+                        table_out.write((char *) &ParkUpdate[i], sizeof(struct structs::PC));
                     }
+                    std::cin.get();
+                    table_out.close();
+                    if (table_out.is_open() != 0) {
+                        std::cout
+                                << "Ошибка закрытия файла\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
+                        exit(1);                                    // завершаем программу с кодом 1
+                    }
+                    delete[] ParkUpdate;
                 }
                 if (std::string(argv[1]) == "-r") {
                     std::ifstream table_in(argv[3], std::ios::in | std::ios::binary);
@@ -54,7 +53,7 @@ int main(int argc, char** argv) {
                     file_size = table_in.tellg();
                     if (file_size != 0 && n != 0) {
                         table_in.seekg(std::ios::beg);
-                        table_in.read((char *) &file_bit, sizeof(unsigned long));
+                        table_in.read((char *) &file_bit, sizeof(CORRECT_BIT));
                         if (file_bit != CORRECT_BIT) RaiseHelpScreen("error");
                         table_in.read((char *) &n_content, sizeof(int));
                         if (n > n_content) n = n_content;
@@ -80,8 +79,8 @@ int main(int argc, char** argv) {
         catch (std::exception e) { // Обработка исключения, связанного с выделением динамической памяти
             perror("Memory allocation error");
         }
-    } else
-    {
+    } else {
+        std::cout << CorrectSyntax(argc,argv) << std::endl;
         std::string error_msg[] = {
                 "Correct arguments for run this app must be like:\n\n",
                 "--help or -h : help mode\n",
@@ -94,9 +93,9 @@ int main(int argc, char** argv) {
                 "Example3: /home/username/Lab1   -c 10 my_table\n\n",
                 "Example4: /home/username/Lab1   -r 5 my_table\n\n",
         };
-        for (auto & i : error_msg){
+        for (auto &i: error_msg) {
             std::cout << i;
         }
-    };
+    }
     return 0;
 }

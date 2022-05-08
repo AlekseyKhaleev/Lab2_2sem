@@ -452,12 +452,12 @@ void NewError() {
     throw std::bad_alloc();
 }
 
-bool CorrectSyntax(int argc, char* argv[]){
-    bool correct = false;
+int CorrectSyntax(int argc, char* argv[]){
+    int correct = -1;
     switch (argc) {
         case 2: {
             if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help"){
-                correct = true;
+                correct = 0;
             }
             break;
         };
@@ -469,13 +469,25 @@ bool CorrectSyntax(int argc, char* argv[]){
                     {"-c", 2}
             };
             int n = std::stoi(argv[2]);
-            if (argv[2] == std::to_string(n)){
+            if (argv[2] == std::to_string(n) && n != 0){ //если количество строк целое и больше нуля
                 switch(choice_map[argv[1]]){
-                    case 1:{
+                    case 1:{ // читаем
                         std::ifstream data(argv[3], std::ios::in | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
-                            correct = true;
+                            long file_size;
+                            unsigned long file_bit;
+                            data.seekg(0, std::ios::end);
+                            file_size = data.tellg();
+                            if (file_size == 0) {
+                                correct = 1; // если файл пустой
+                            }else {
+                                data.seekg(std::ios::beg);
+                                data.read((char *) &file_bit, sizeof(CORRECT_BIT));
+                                if (file_bit == CORRECT_BIT) {    //создан ли файл в этой проге
+                                    correct = 0;
+                                } else correct = 2;
+                            }
                         }
                         data.close();
                         if (data.is_open() != 0) {
@@ -484,11 +496,11 @@ bool CorrectSyntax(int argc, char* argv[]){
                         }
                         break;
                     }
-                    case 2:{
+                    case 2:{ //пишем
                         std::ofstream data(argv[3], std::ios::out | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
-                            correct = true;
+                            correct = 0;
                         }
                         data.close();
                         if (data.is_open() != 0) {
@@ -498,7 +510,7 @@ bool CorrectSyntax(int argc, char* argv[]){
                         break;
                     }
                 }
-            }
+            } else correct = 3; // пользователь захотел ввести/прочитать 0 строк
             break;
         }
         default: break;

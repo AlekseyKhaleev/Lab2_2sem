@@ -37,7 +37,7 @@ void RaiseHelpScreen(const std::string& reason);
 /* Функция вызова исключения связанного с выделением памяти для передачи в set_new_handler() */
 void NewError();
 
-bool CorrectSyntax(int argc, char* argv[]);
+int CorrectSyntax(int argc, char* argv[]);
 
 void DrawHead();
 
