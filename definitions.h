@@ -16,6 +16,7 @@ const int BLOCK_WIDTH   = 18;
 const int BLOCK_HEIGHT  = 3;
 const int TABLE_COLS    = 6;
 const int STRLEN        = 80;
+const unsigned long CORRECT_BIT   = 1598745732109853234;
 
 
 /* Определение кодов "горячих клавиш" для обработки ввода с клавиатуры */

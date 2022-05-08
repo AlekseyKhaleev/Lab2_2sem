@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
                     }
                     int n = std::stoi(argv[2]);
                     if (n > 0) {
+                        table_out.write((char *) &CORRECT_BIT, sizeof(unsigned long));
                         table_out.write((char *) &n, sizeof(int));
                         auto ParkUpdate = new structs::PC[n];
                         DrawFrame(n + 1);
@@ -47,11 +48,14 @@ int main(int argc, char** argv) {
                     }
                     int n = std::stoi(argv[2]);
                     int n_content;
+                    unsigned long file_bit;
                     long file_size;
                     table_in.seekg(0, std::ios::end);
                     file_size = table_in.tellg();
                     if (file_size != 0 && n != 0) {
                         table_in.seekg(std::ios::beg);
+                        table_in.read((char *) &file_bit, sizeof(unsigned long));
+                        if (file_bit != CORRECT_BIT) RaiseHelpScreen("error");
                         table_in.read((char *) &n_content, sizeof(int));
                         if (n > n_content) n = n_content;
                         auto ParkContent = new structs::PC[n];

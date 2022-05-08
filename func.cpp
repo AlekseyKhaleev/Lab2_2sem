@@ -472,7 +472,7 @@ bool CorrectSyntax(int argc, char* argv[]){
             if (argv[2] == std::to_string(n)){
                 switch(choice_map[argv[1]]){
                     case 1:{
-                        std::ifstream data(argv[3]);
+                        std::ifstream data(argv[3], std::ios::in | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
                             correct = true;
@@ -485,7 +485,7 @@ bool CorrectSyntax(int argc, char* argv[]){
                         break;
                     }
                     case 2:{
-                        std::ofstream data(argv[3]);
+                        std::ofstream data(argv[3], std::ios::out | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
                             correct = true;

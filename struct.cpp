@@ -1,6 +1,5 @@
 
 #include "struct.h"
-#include <string>
 #include <iostream>
 #include "definitions.h"
 namespace structs{
