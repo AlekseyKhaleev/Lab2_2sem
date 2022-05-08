@@ -1,0 +1,3 @@
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/CMakeFiles/Lab2_2.dir
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
