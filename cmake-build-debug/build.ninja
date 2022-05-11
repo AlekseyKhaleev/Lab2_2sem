@@ -67,6 +67,12 @@ build CMakeFiles/Lab2_2.dir/struct.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/krist
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
+build CMakeFiles/Lab2_2.dir/draw_func.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/draw_func.cpp || cmake_object_order_depends_target_Lab2_2
+  DEP_FILE = CMakeFiles/Lab2_2.dir/draw_func.cpp.o.d
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles/Lab2_2.dir
+  OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Lab2_2
@@ -75,7 +81,7 @@ build CMakeFiles/Lab2_2.dir/struct.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/krist
 #############################################
 # Link the executable Lab2_2
 
-build Lab2_2: CXX_EXECUTABLE_LINKER__Lab2_2_Debug CMakeFiles/Lab2_2.dir/main.cpp.o CMakeFiles/Lab2_2.dir/func.cpp.o CMakeFiles/Lab2_2.dir/struct.cpp.o
+build Lab2_2: CXX_EXECUTABLE_LINKER__Lab2_2_Debug CMakeFiles/Lab2_2.dir/main.cpp.o CMakeFiles/Lab2_2.dir/func.cpp.o CMakeFiles/Lab2_2.dir/struct.cpp.o CMakeFiles/Lab2_2.dir/draw_func.cpp.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   POST_BUILD = :

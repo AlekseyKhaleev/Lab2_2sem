@@ -1,42 +1,21 @@
 /* Данный модуль содержит описания функций, необходимых для корректной работы программы Lab1 */
 
 /* Подключение модулей */
+#include "struct.h"
+#include "definitions.h"
 #include "func.h"
+#include "draw_func.h"
 #include <termios.h>
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <cctype>
 #include <string>
 #include <map>
+#include <array>
 
-void CustomizeTerminal(std::string font, std::string back){
-    // Цель: Изменить параметры терминала в для корректной работы программы в соответствии с заданием.
-    // Исходные данные:
-    // Результат: Терминал готов к работе программы с новыми параметрами.
-    // Вызываемые модули: <definitions.h>
-    /* Описание алгоритма:
-    * Для изменения необходимых настроек терминала используются макроопределения, описанные в модуле definitions.h
-    * 1) С помощью константных значений, соответствующих требованиям к работе программы (ширина = 80), изменяется
-    * размер окна терминала.
-    * 2) Отключается перенос по словам.
-    * 3) Применяются новые настройки цветовой палитры терминала:
-    *   - серый текст
-    *   - черный фон
-    * 4) Курсор перемещается в левый верхний угол, производится очистка экрана и буфера с заполнением фона с учетом
-    * новых настроек цветовой палитры.
-    // Дата: 2022 / 03 / 09 Версия 1.01
-    // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
-    // Исправления: нет
-    /***********************************************************************************************************/
-    set_window_size(SCREEN_WIDTH, SCREEN_HEIGHT);
-    //cut();
-    set_display_atrib(font, back);
-    clear_screen();
-}
 
-void PrintLogo(char file_name[]){
+void PrintHeader(char *argv[]) {
     // Цель: Формирование и вывод логотипа программы в окно терминала.
     // Исходные данные:
     //      file_name - строка, содержащая имя файла, открытого в программе
@@ -59,67 +38,63 @@ void PrintLogo(char file_name[]){
             "\n",
             "***********************************************************\n",
             "* Nizhniy Novgorod Technical University                   *\n",
-            "* Study work number 1. Task number 8. Semester number 2.  *\n",
+            "* Study work number 2. Task number 8. Semester number 2.  *\n",
             "* Performed student 21-IVTz Khaleev Aleksey               *\n",
             "***********************************************************\n",
-            "\n",
-            "Contents of the " + std::string(file_name) + " file:",
             "\n"};
 
-    set_display_atrib(F_BLACK, B_WHITE);                    // Изменение настроек цветовой палитры терминала
-
-    /* Перевод курсора в верхний левый угол, очистка экрана, очистка буфера прокрутки и заполнение фона */
-    clear_screen();
-
     size_t left_bord = (SCREEN_WIDTH - LOGO_WIDTH) / 2.;   // Вычисление левой границы выводимого текста
-    for (auto & i : logo){                         // Обход массива строк логотипа программы
+    for (auto &i: logo) {                         // Обход массива строк логотипа программы
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
         std::cout << i;                                    // Вывод очередной строки логотипа программы
     }
-    set_display_atrib(F_GREY, B_BLACK);                    // Восстановление программных настроек цветовой палитры
-    std::cout << std::endl;
+    move_start_down(1);
+    if (std::string(argv[1]) == "-r") {
+        std::cout << std::setw(left_bord) << "";           // Центрирование вывода
+        std::cout << "The data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+    }
+    if (std::string(argv[1]) == "-c") {
+        std::cout << std::setw(left_bord) << "";           // Центрирование вывода
+        std::cout << "Please enter the data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+    }
 }
 
-void PrintQuickHelp(const std::string& reason){
-    // Цель: Вывод строки минимальной справки в зависимости от причины вызова.
+void PrintFooter(char *argv[], std::array<int, 2> rows, std::string reason) {
+    // Цель: Формирование и вывод логотипа программы в окно терминала.
     // Исходные данные:
-    //      reason - строка-ключ для передачи в качестве аргумента в модуль PrintHelp() для вывода короткой справки
-    // Результат: В окно терминала выведена строка с минимальной справочной информацией.
-    // Вызываемые модули: <string>, <map>
+    //      file_name - строка, содержащая имя файла, открытого в программе
+    // Результат: В окно терминала выведен логотип программы.
+    // Вызываемые модули: <string>
     /* Описание алгоритма:
-    * Справочная строка может отличаться в зависимости от текущего содержимого в окне терминала.
-    * 1) С помощью ассоциативного контейнера choice_map задаются пары ключ-значение типов string-string. Каждый ключ
-    * обозначает одно из условий вызова справки, получаемое с помощью аргумента reason. Ключу ставится в соответствие
-    * строка, которая будет выведена на экран.
-    * 2) Производится проверка корректности аргумента, переданного в переменную reason.
-    * 3) Если ключ reason присутствует в choice_map:
-    *   - изменяются параметры цветового оформления терминала
-    *   - выводится значение choice_map, соответствующее ключу reason
-    *   - восстанавливаются программные настройки цветового оформления терминала
-    * 4) Если ключ reason отсутствует в choice_map выводится сообщение об отсутствии ключа reason.
+    * 1) Объявляется массив строк logo и инициализируется строками, соответствующими логотипу программы
+    * 2) Применяются требуемые настройки цветового оформления терминала.
+    * 3) Курсор переводится в левый верхний угол. Осуществляется очистка окна терминала, очистка буфера прокрутки
+    * и заполнение фона терминала.
+    * 4) С помощью обхода массива logo в цикле осуществляется вывод справочной информации по центру.
+    * 5) Восстанавливаются программные настройки цветовой палитры терминала, завершение работы модуля.
     // Дата: 2022 / 03 / 09 Версия 1.01
     // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
     // Исправления: нет
     /***********************************************************************************************************/
 
-    /* Инициализация ассоциативного контейнера choice_map */
-    std::map <std::string, std::string> choice_map{
-            /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
-            {"error", " Please run this program with correct syntax. (press Esc for exit)"},
-            /* Строка справки для экрана, формируемого в режиме прокрутки содержимого файла */
-            {"text", " Press Esc for exit or h for help"},
-            /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
-            {"help", " Press Esc for exit or r for return to text"}
-    };
-    if (choice_map.find(reason) != choice_map.end()){ // Если в переменную reason передан корректный аргумент
-        set_display_atrib(F_BLACK, B_WHITE);             // Изменение цветовых параметров терминала
-        std::cout << choice_map[reason];                 // Вывод минимальной справочной информации
-        set_display_atrib(F_GREY, B_BLACK);              // Восстановление программных цветовых параметров терминала
-    } else
-        std::cout << "PrintHelp() error. Key '" << reason << "' not found."; // Вывод сообщения о некорректном аргументе
+    size_t left_bord = (SCREEN_WIDTH - LOGO_WIDTH) / 2.;   // Вычисление левой границы выводимого текста
+    move_start_down(2);
+    if (std::string(argv[1]) == "-r") {
+        std::cout << std::setw(left_bord) << "";           // Центрирование вывода
+        std::cout << "The PC-park table was initialized successfully.\n\n";
+        std::cout << std::setw(left_bord) << "";
+        std::cout << "Loaded " + std::to_string(rows[0]) + " of " + std::to_string(rows[1]) + " lines\n\n";
+    }
+    if (std::string(argv[1]) == "-c") {
+        std::cout << std::setw(left_bord) << "";           // Центрирование вывода
+        std::cout << "The creation of the PC-park table is now complete.\n\n";
+    }
+    to_end();
+    std::cout << std::setw(left_bord) << "";           // Центрирование вывода
+    PrintQuickHelp(reason);      // Вывод очередной строки логотипа программы
 }
 
-void PrintHelpScreen(const std::string& reason){
+void PrintHelpScreen(const std::string &reason) {
     // Цель: Формирование и вывод справочного экрана в окно терминала.
     // Исходные данные:
     //      reason - строка, ключ для передачи в качестве аргумента в модуль PrintHelp() для вывода короткой справки
@@ -147,212 +122,85 @@ void PrintHelpScreen(const std::string& reason){
              "This app will help you create and view tables containing\n",
              "the characteristics of your fleet of PC's\n\n",
              "Correct arguments for run this app must be like:\n\n",
-             "--help or -h : help mode\n",
-             "-с [N] [file_name] - create spreadsheet mode\n",
-             "-r [N] [file_name] - read spreadsheet mode\n\n",
+             "        --help or -h : help mode\n",
+             "        -с [N] [file_name] : create spreadsheet mode\n",
+             "        -r [N] [file_name] : read spreadsheet mode\n\n",
              "N – the number of records;\n",
              "file_name – file path to save/read the table;\n\n",
-             "Example1: /home/username/Lab1   -h\n\n",
-             "Example2: /home/username/Lab1   --help\n\n",
-             "Example2: /home/username/Lab1   -c 10 my_table\n\n",
-             "Example3: /home/username/Lab1   -r 5 my_table\n\n",
-             "This program conclude few hot-keys for control application:\n\n",
+             "Example1: /home/username/Lab1   -h\n",
+             "Example2: /home/username/Lab1   --help\n",
+             "Example3: /home/username/Lab1   -c 10 my_table\n",
+             "Example4: /home/username/Lab1   -r 5 my_table\n\n",
+             "                             IMPORTANT!\n",
+             " Keep in mind that to start the program correctly in create or read mode\n",
+             "you must correctly specify the number of rows of the future table:\n",
+             "- if the specified number of rows is not positive ( N <= 0),\n",
+             "the program will not start\n",
+             "- if the number of rows specified in the read mode is less than the number\n",
+             "contained in the specified file, the first rows will be displayed according\n",
+             "to the query;\n",
+             "- if the specified number of lines in read mode is more than contained\n",
+             "in the specified file, all lines contained in the file will be shown. \n\n",
+             "This program conclude few hot-keys for control application in -c/-r mode:\n\n",
              "Esc      - exit program\n",
              "h        - view help page\n",
-             "r        - return to text document\n",
-             "Up       - scroll text document up\n",
-             "Down     - scroll text document down\n"};
+             "r        - return to program interface\n\n"};
     set_display_atrib(F_BLACK, B_WHITE);                    // Изменение настроек цветовой палитры терминала
 
     /* Перевод курсора в верхний левый угол, очистка экрана, очистка буфера прокрутки и заполнение фона */
     clear_screen();
 
     size_t left_bord = (SCREEN_WIDTH - LOGO_WIDTH) / 2.;    // Вычисление левой границы выводимого текста
-    for (auto & i : help_screen){                   // Обход массива строк со справочной информацией
+    for (auto &i: help_screen) {                    // Обход массива строк со справочной информацией
         std::cout << std::setw(left_bord) << "";            // Центрирование вывода
         std::cout << i;                                     // Вывод очередной справочной строки
     }
     to_end();                                               // Перевод курсора в начало последней строки
-    std::cout<< std::setw(left_bord) << "";                 // Центрирование вывода
-    PrintQuickHelp(reason);                                      // Вывод минимальной справки о возможных действиях
+    std::cout << std::setw(left_bord) << "";// Центрирование вывода
+    PrintQuickHelp(reason); // Вывод минимальной справки о возможных действиях
     set_display_atrib(F_GREY, B_BLACK);                     // Применение программных настроек цветовой палитры
 }
 
-int StringCounter(char* path, std::string str_buffer){
-    // Цель: Вычисление количества строк в файле.
+void PrintQuickHelp(const std::string& reason){
+    // Цель: Вывод строки минимальной справки в зависимости от причины вызова.
     // Исходные данные:
-    //      path - строка, содержащая полный путь к целевому файлу
-    //      str_buffer - буферная строка для построчного считывания содержимого файла
-    // Результат: Функция возвращает целое число, соответствующее количеству строк в файле
-    // Вызываемые модули: <string>, <fstream>, RaiseError()
+    //      reason - строка-ключ для передачи в качестве аргумента в модуль PrintHelp() для вывода короткой справки
+    // Результат: В окно терминала выведена строка с минимальной справочной информацией.
+    // Вызываемые модули: <string>, <map>
     /* Описание алгоритма:
-    * 1) Объявляется целочисленная переменная-счетчик для подсчета количества строк в файле
-    * и инициализируется значением 0.
-    * 2) С помощью экземпляра класса ifstream открывается файл, путь к которому содержится в path
-    * 3) Выполняется проверка успешного открытия файла.
-    * 4) Если файл не был открыт успешно выполняется вызов функции RaiseError(), которая выводит
-    * сообщение об ошибке и ожидает нажатия клавиши для завершения программы.
-    * 5) Если файл открыт успешно:
-    *   - производится построчное считывание содержимого файла в буферную строку str_buffer до тех пор, пока
-    *   не будет достигнут конец файла
-    *   - на каждой итерации переменная-счетчик str_cnt увеличивается на 1.
-    * 6) Выполняется закрытие файла, с проверкой успешного выполнения операции. В случае ошибки закрытия файла
-    *  выводится соответствующее сообщение, программа завершается с аварийным кодом.
-    * 7) Функция возвращает значение переменной-счетчика str_counter
-    // Дата: 2022 / 03 / 09 Версия 1.01
-    // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
-    // Исправления: нет
-    /***********************************************************************************************************/
-    int str_cnt{0};                                 // Переменная-счетчик
-
-    /* Открытие файла */
-    std::ifstream data(path);
-
-    /* Если файл не пустой продолжаем работу с его содержимым */
-    if (data.is_open()) {
-        while (!data.eof()) {                       // Пока не достигнут конец файла
-            std::getline(data, str_buffer);   // Считать очередную строку файла в str_buffer
-            str_cnt++;                              // Увеличить значения счетчика на 1
-        }
-    } else {
-        RaiseHelpScreen("error");                               // Аварийное завершение программы с выводом справки
-    }
-    /* Закрытие файла */
-    data.close();
-    if (data.is_open() != 0) {
-        std::cout << "Ошибка закрытия файла\n";     // Если файл не закрыт корректно выводим сообщение ошибке и
-        exit(1);                              // завершаем программу с кодом 1
-    }
-    return str_cnt;                                 // Возврат значения счетчика, завершение работы модуля
-}
-
-void InitScrStates(char* path, std::string str_buffer, std::string* screen_states) {
-    // Цель: Инициализация массива строк (состояний экрана) строками, считанными из файла.
-    // Каждое "состояние экрана" - это буфер, который соответствует отображаемому содержанию файла
-    // в очередном положении прокрутки.
-    // Исходные данные:
-    //		path - указатель на строку, содержащую путь к исходному файлу
-    //		str_buffer - указатель на строку-буфер для построчного обхода файла
-    //		screen_states - указатель на двумерный массив для хранения строк-состояний экрана
-    // Результат: массив screen_states инициализирован соответствующими строками
-    // Вызываемые модули: SyntaxHighLighting(), RaiseError(), <string>
-    /* Описание алгоритма:
-    * 1) С помощью экземпляра класса ifstream открывается файл, путь к которому содержится в path
-    * 2) Выполняется проверка успешного открытия файла.
-    * 3) Если файл не был открыт успешно выполняется вызов функции RaiseError(), которая выводит
-    * сообщение об ошибке и ожидает нажатия клавиши для завершения программы.
-    * 4) Если файл открыт успешно:
-    *  - Для формирования начального "состояния экрана" построчно считывается содержимое файла.
-    *  Считанная строка сохраняется в str_buffer, затем обрабатывается с помощью функции SyntaxHighLighting(),
-    *  в результате обработки ключевые слова в строке будут дополнены ESC-последовательностями для выделения
-    *  их цветом в терминале. Затем в буфер начального состояния экрана с индексом 0 добавляется содержимое str_buffer.
-    *  Количество считываемых строк определяется как установленный размер экрана терминала минус
-    *  количество строк логотипа минус один (строка содержащая краткую справку).
-    *  - Формируются все оставшиеся "состояния экрана". Для каждого состояния в str_buffer считывается
-    *  очередная строка из файла и обрабатывается с помощью функции SyntaxHighLighting(). В очередное "состояние экрана"
-    *  с индексом i копируется подстрока из предыдущего "состояния экрана" с индексом i-1 в которой содержатся
-    *  все данные без первой строки.
-    *  Индекс начала подстроки равен первому вхождению символа перевода каретки + 1. Производится
-    *  конкатенация полученного буфера с содержимым str_buffer. В конец добавляется символ перевода каретки.
-    * 5) Выполняется закрытие файла, с проверкой успешного выполнения операции. В случае ошибки закрытия файла
-    *  выводится соответствующее сообщение, программа завершается с аварийным кодом.
-    // Дата: 2022 / 03 / 09 Версия 1.01
-    // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
-    // Исправления: нет
-    /**********************************************************************************************/
-
-    /* Открытие файла */
-    std::ifstream data(path);
-    /* Если файл открыт успешно, продолжаем работу с его содержимым */
-    if (data.is_open()) {
-        for (int i = 0; i < SCREEN_HEIGHT - LOGO_LEN; i++) { // формирование начального "состояния экрана"
-            std::getline(data, str_buffer);            // считывание строки
-            SyntaxHighLighting(str_buffer);               // обработка, подсветка ключевых слов
-            screen_states[0] += str_buffer + '\n';           // добавление обработанной строки в конец целевого буфера
-        }
-        int i = 1;   // индекс текущего "состояния экрана" для наполнения
-
-        /* index - переменная для хранения стартовой позиции подстроки предыдущего "состояния экрана", необходимой
-         * для формирования очередного положения прокрутки ("состояния экрана") */
-        std::string::size_type index;
-
-        while (!data.eof()) {                               // пока не достигнут конец файла
-            std::getline(data, str_buffer);           // считывание строки
-            SyntaxHighLighting(str_buffer);              // обработка, подсветка ключевых слов
-            index = screen_states[i-1].find('\n') + 1;   // вычисление индекса, соответствующего второй строке
-
-            /* Наполнение очередного состояния экрана */
-            screen_states[i] += screen_states[i-1].substr(index) + str_buffer + '\n';
-            i++;                                           // увеличиваем индекс текущего "состояния экрана" на 1
-        }
-    }else {
-        RaiseHelpScreen("error"); // Если файл не открыт выводим сообщение об ошибке, справку и ожидаем нажатие клавиши для выхода
-    }
-    data.close();
-    if (data.is_open() != 0) {
-        std::cout << "Ошибка закрытия файла\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
-        exit(1);                                    // завершаем программу с кодом 1
-    }
-}
-
-void SyntaxHighLighting(std::string& target_string){
-    // Цель: Подсветка синтаксиса (ключевых слов из соответствующего массива) в строке посредством дополнения
-    // целевой строки соответствующими ESC-последовательностями.
-    // Исходные данные:
-    //		target_string - ссылка на целевую строку, которую требуется изменить
-    // Результат: строка target_string дополнена соответствующими ESC-последовательностями
-    // Вызываемые модули: <string>
-    /* Описание алгоритма:
-    * 1) Объявляется массив строк keywords и инициализируется строками, состоящих из ключевых слов
-    * 2) В цикле производится обход массива keywords, на каждой итерации:
-    *   - объявляется индекс начала поиска в строке: ind и инициализируется значением 0.
-    *   - объявляется строка highlighted_keyword, инициализируется очередным ключевым словом, заключенным между
-    *   двумя ESC-последовательностями, которые соответствуют изменению цветовой палитры терминала перед словом и
-    *   восстановлению исходных параметров после слова.
-    *   - выполняется поиск всех вхождений очередного ключевого слова в строку target_string и замена на
-    *   "подсвеченное" ключевое слово highlighted_keyword, если оно является самостоятельным словом (перед и
-    *   после слова нет символов латинского алфавита) и если перед словом нет подстроки "//", соответствующей
-    *   началу однострочного комментария в синтаксисе С++.
+    * Справочная строка может отличаться в зависимости от текущего содержимого в окне терминала.
+    * 1) С помощью ассоциативного контейнера choice_map задаются пары ключ-значение типов string-string. Каждый ключ
+    * обозначает одно из условий вызова справки, получаемое с помощью аргумента reason. Ключу ставится в соответствие
+    * строка, которая будет выведена на экран.
+    * 2) Производится проверка корректности аргумента, переданного в переменную reason.
+    * 3) Если ключ reason присутствует в choice_map:
+    *   - изменяются параметры цветового оформления терминала
+    *   - выводится значение choice_map, соответствующее ключу reason
+    *   - восстанавливаются программные настройки цветового оформления терминала
+    * 4) Если ключ reason отсутствует в choice_map выводится сообщение об отсутствии ключа reason.
     // Дата: 2022 / 03 / 09 Версия 1.01
     // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
     // Исправления: нет
     /***********************************************************************************************************/
 
-    /* Массив ключевых слов */
-    std::string keywords[] = {
-            "asm", "auto", "bool", "break", "case", "catch", "cin", "char", "class",
-            "const", "const_cast","continue", "cout","default", "delete", "do",
-            "double","dynamic_cast", "else", "enum", "explicit","export", "extern",
-            "false","float", "for", "goto", "goto", "if", "#include", "inline",
-            "int","long","mutable", "namespace", "new", "operator", "private",
-            "protected","public", "register","reinterpret_cast", "return", "short",
-            "signed","sizeof", "short","signed", "sizeof","static", "struct",
-            "switch", "template", "this", "throw","typedef","true", "try",
-            "typeid", "typename", "union", "voidunion","using","virtual", "void"};
-
-    for(auto &i: keywords){                // обход в цикле массива ключевых слов
-        size_t ind = 0;                            // начальный индекс поиска ключевого слова
-
-        /* "Подсветка" ключевого слова с помощью конкатенации с соответствующими ESC-последовательностями */
-        std::string highlighted_keyword = ESC "[" F_WHITE ";" B_BLACK "m" + i + ESC "[" F_GREY ";" B_BLACK "m";
-
-        /* Пока удается найти ключевое слово в строке, переменной ind присваивается индекс очередного вхождения */
-        while((ind = target_string.find( i, ind)) != std::string::npos){
-
-            /* Если символ предшествующий найденной подстроке или завершающий ее является символом латинского
-             * алфавита, или присутствует подстрока "//" соответствующая началу комментария в синтаксисе С++ */
-            if ((std::isalpha(target_string[ind - 1]) || std::isalpha(target_string[ind + i.size()]) ||
-                 target_string.find("//") < ind)){
-                break;                             // прерывание цикла, переход к следующему ключевому слову
-            }
-            /* замена ключевого слова на измененное ключевое слово (с ESC-последовательностями) */
-            target_string.replace(ind, i.size(), highlighted_keyword);
-            ind += highlighted_keyword.size();    // продвижение индекса для поиска
-        }
-    }
+    /* Инициализация ассоциативного контейнера choice_map */
+    std::map <std::string, std::string> choice_map{
+            /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
+            {"help_arg", "                 Press Esc for exit"},
+            /* Строка справки для экрана, формируемого в режиме прокрутки содержимого файла */
+            {"text", "            Press Esc for exit or h for help"},
+            /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
+            {"help_prog", "            Press Esc for exit or r for return to text"}
+    };
+    if (choice_map.find(reason) != choice_map.end()){ // Если в переменную reason передан корректный аргумент
+        set_display_atrib(F_BLACK, B_WHITE);             // Изменение цветовых параметров терминала
+        std::cout << choice_map[reason];                 // Вывод минимальной справочной информации
+        set_display_atrib(F_GREY, B_BLACK);              // Восстановление программных цветовых параметров терминала
+    } else
+        std::cout << "PrintHelp() error. Key '" << reason << "' not found."; // Вывод сообщения о некорректном аргументе
 }
 
-int UserKey(){
+int UserKey() {
     // Цель: Считывание кода нажатой клавиши в терминале без промежуточной буферизации
     // Исходные данные:
     // Результат: функция возвращает целое число соответствующее коду нажатой клавиши
@@ -394,17 +242,17 @@ int UserKey(){
     /***********************************************************************************************************/
     struct termios oldt{}, newt{};                          // структуры для хранения состояния терминала
     int key_code, buffer_index{1}, key_buffer[KEY_BUF_LEN]; // Переменные и массив, необходимые для работы модуля
-    tcgetattr( STDIN_FILENO, &oldt );          // Сохранение исходного состояния терминала
+    tcgetattr(STDIN_FILENO, &oldt);          // Сохранение исходного состояния терминала
     newt = oldt;                                            // Копирование состояния терминала для дальнейшей работы
-    newt.c_lflag &= ~( ICANON | ECHO );                     // Отключение флагов "каноничный" и "эхо"
-    tcsetattr( STDIN_FILENO, TCSANOW, &newt ); // Применение новых параметров терминала
+    newt.c_lflag &= ~(ICANON | ECHO);                     // Отключение флагов "каноничный" и "эхо"
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt); // Применение новых параметров терминала
     key_buffer[0] = getchar(); // Считывание нажатия клавиши клавиатуры
 
     // Блок обработки, проверка на получение управляющей клавиши, сохранение целочисленного кода нажатой клавиши
     if (key_buffer[0] == 27) {
         newt.c_cc[VMIN] = 0;
         tcsetattr(0, TCSANOW, &newt);
-        while ((key_buffer[buffer_index] = getchar()) > 0){
+        while ((key_buffer[buffer_index] = getchar()) > 0) {
             ++buffer_index;
             if (buffer_index >= KEY_BUF_LEN) break;
         }
@@ -416,11 +264,11 @@ int UserKey(){
         key_code = key_buffer[0];
 
     /* Восстановление исходных параметров терминала */
-    tcsetattr( STDIN_FILENO, TCSANOW, &oldt );
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return key_code; // Возвращение целочисленного кода нажатой клавиши, завершение работы модуля
 }
 
-void RaiseHelpScreen(const std::string& reason){
+void RaiseHelpScreen(const std::string &reason) {
     // Цель: Аварийное завершение программы с предварительным выводом справочной информации.
     // Исходные данные:
     // Результат: Пользователь ознакомлен со справочной информацией, программа завершена с кодом 1
@@ -435,12 +283,16 @@ void RaiseHelpScreen(const std::string& reason){
     // Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
     // Исправления: нет
     /***********************************************************************************************************/
+    CustomizeTerminal(F_BLACK, B_WHITE);
     PrintHelpScreen(reason);
     bool mark = true;
-    while (mark){
-        switch(UserKey()){
-            case Escape: mark = false; break;
-            default: break;
+    while (mark) {
+        switch (UserKey()) {
+            case Escape:
+                mark = false;
+                break;
+            default:
+                break;
         }
     }
     reset_screen();
@@ -452,26 +304,26 @@ void NewError() {
     throw std::bad_alloc();
 }
 
-int CorrectSyntax(int argc, char* argv[]){
+int CorrectSyntax(int argc, char *argv[]) {
     int correct = -1;
     switch (argc) {
         case 2: {
-            if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help"){
+            if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
                 correct = 0;
             }
             break;
         };
-        case 4:{
-            std::map <std::string, int> choice_map{
+        case 4: {
+            std::map<std::string, int> choice_map{
                     /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
                     {"-r", 1},
                     /* Строка справки для экрана, формируемого в режиме прокрутки содержимого файла */
                     {"-c", 2}
             };
             int n = std::stoi(argv[2]);
-            if (argv[2] == std::to_string(n) && n != 0){ //если количество строк целое и больше нуля
-                switch(choice_map[argv[1]]){
-                    case 1:{ // читаем
+            if (argv[2] == std::to_string(n) && n > 0) { //если количество строк целое и больше нуля
+                switch (choice_map[argv[1]]) {
+                    case 1: { // читаем
                         std::ifstream data(argv[3], std::ios::in | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
@@ -481,30 +333,32 @@ int CorrectSyntax(int argc, char* argv[]){
                             file_size = data.tellg();
                             if (file_size == 0) {
                                 correct = 1; // если файл пустой
-                            }else {
+                            } else {
                                 data.seekg(std::ios::beg);
                                 data.read((char *) &file_bit, sizeof(CORRECT_BIT));
                                 if (file_bit == CORRECT_BIT) {    //создан ли файл в этой проге
                                     correct = 0;
                                 } else correct = 2;
                             }
-                        }
+                        } else correct = 4;
                         data.close();
                         if (data.is_open() != 0) {
-                            std::cout << "Ошибка закрытия файла\n"; // Если файл не закрыт корректно выводим сообщение ошибке и
+                            std::cout
+                                    << "Ошибка закрытия файла\n"; // Если файл не закрыт корректно выводим сообщение ошибке и
                             exit(1);                          // завершаем программу с кодом 1
                         }
                         break;
                     }
-                    case 2:{ //пишем
+                    case 2: { //пишем
                         std::ofstream data(argv[3], std::ios::out | std::ios::binary);
                         /* Если файл открыт успешно, продолжаем работу с его содержимым */
                         if (data.is_open()) {
                             correct = 0;
-                        }
+                        } else correct = 4;
                         data.close();
                         if (data.is_open() != 0) {
-                            std::cout << "Ошибка закрытия файла\n"; // Если файл не закрыт корректно выводим сообщение ошибке и
+                            std::cout
+                                    << "Ошибка закрытия файла\n"; // Если файл не закрыт корректно выводим сообщение ошибке и
                             exit(1);                          // завершаем программу с кодом 1
                         }
                         break;
@@ -513,67 +367,106 @@ int CorrectSyntax(int argc, char* argv[]){
             } else correct = 3; // пользователь захотел ввести/прочитать 0 строк
             break;
         }
-        default: break;
-    };
+        default:
+            break;
+    }
     return correct;
 }
 
-void DrawHead(){
-    std::string head[] = {"N","CPU Type","CPU Freq. (MHz)","Memory (MB)","Storage (GB)",
-                          "Display"};
-    for(int i=START_COL, j=0; i < (BLOCK_WIDTH-1)*TABLE_COLS+START_COL; i+=(STEP_COL), j++){
-        move_cursor(3, i);
-        std::cout << head[j];
+void RaiseSyntaxError(int reason) {
+    std::map <int, std::string> choice_map{
+            /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
+            {-1, "\n Wrong number or type of arguments.\nAmong other things, check your keyboard layout\n"},
+            /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
+            {1,"\n The specified file is empty\n"},
+            {2,"\n The specified file was not created in this program\n"},
+            {3,"\n The specified number of lines cannot be less than or equal to zero\n"},
+            {4,"\n Unable to open or create specified file\nCheck that the specified file exists\n"}
+    };
+    std::cout << choice_map[reason] << std::endl;
+    std::string error_msg[] = {
+            "Correct arguments for run this app must be like:\n\n",
+            "--help or -h : help mode\n",
+            "-с [N] [file_name] : create spreadsheet mode\n",
+            "-r [N] [file_name] : read spreadsheet mode\n\n",
+            "N – the number of records;\n",
+            "file_name – file path to save/read the table;\n\n",
+            "Example1: /home/username/Lab1   -h\n\n",
+            "Example2: /home/username/Lab1   --help\n\n",
+            "Example3: /home/username/Lab1   -c 10 my_table\n\n",
+            "Example4: /home/username/Lab1   -r 5 my_table\n\n",
+            "",
+    };
+    for (auto &i: error_msg) {
+        std::cout << i;
     }
 }
 
-void DrawStartBlock(){
-    std::cout << "┌────────────────┐";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "│                │";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "└────────────────┘";
-    move_up(2);
-    move_left(1);
-}
-
-void DrawMidBlock(){
-    std::cout << "┬────────────────┬";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "│                │";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "┴────────────────┴";
-    move_up(2);
-    move_left(1);
-}
-
-void DrawEndBlock(){
-    std::cout << "┬────────────────┐";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "│                │";
-    move_left(BLOCK_WIDTH);
-    move_down(1);
-    std::cout << "┴────────────────┘";
-    move_up(2);
-    move_left(1);
-}
-void DrawFrame(int rows){
-    CustomizeTerminal(F_BLACK, B_WHITE);
-    move_cursor(2, 6);
-    for (int i=0; i < rows; i++){
-        for (int j=0; j < TABLE_COLS; j++){
-            switch(j){
-                case 0: DrawStartBlock(); break;
-                case (TABLE_COLS - 1): DrawEndBlock(); break;
-                default: DrawMidBlock(); break;
+void CreateTable(char *argv[]) {
+    errno = 0;  // Переменная модуля errno.h, хранящая целочисленный код последней ошибки. 0 - отсутствие ошибок
+    std::set_new_handler(
+            NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
+    try {
+        std::ofstream table_out(argv[3], std::ios::out | std::ios::binary);
+        if (table_out.is_open()) {
+            int n = std::stoi(argv[2]);
+            table_out.write((char *) &CORRECT_BIT, sizeof(CORRECT_BIT));
+            table_out.write((char *) &n, sizeof(int));
+            auto ParkUpdate = new structs::PC[n];
+            DrawFrame(n + 1);
+            DrawHead();
+            for (int i = 0; i < n; i++) {
+                ParkUpdate[i].set(i);
+                table_out.write((char *) &ParkUpdate[i], sizeof(struct structs::PC));
             }
+            std::cout << std::endl;
+            delete[] ParkUpdate;
+        } else {
+            std::cout << "Cannot open file\n";
+            exit(1);
         }
-        move_start_down(3);
-        move_right(5);
+        table_out.close();
+        if (table_out.is_open() != 0) {
+            std::cout << "Cannot close file\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
+            exit(1);                                    // завершаем программу с кодом 1
+        }
+    } catch (std::exception e) { // Обработка исключения, связанного с выделением динамической памяти
+        perror("Memory allocation error");
     }
+}
+
+std::array<int, 2> PrintTable(char *argv[]) {
+    std::array<int, 2> n{std::stoi(argv[2]),-1};
+    errno = 0;  // Переменная модуля errno.h, хранящая целочисленный код последней ошибки. 0 - отсутствие ошибок
+    std::set_new_handler(
+            NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
+    try {
+        std::ifstream table_in(argv[3], std::ios::in | std::ios::binary);
+        if (table_in.is_open()) {
+            table_in.seekg(sizeof(CORRECT_BIT));
+            table_in.read((char *) &n[1], sizeof(int));
+            if (n[0] > n[1]) n[0] = n[1];
+            auto ParkContent = new structs::PC[n[0]];
+            DrawFrame(n[0] + 1);
+            DrawHead();
+            for (int i = 0; i < n[0]; i++) {
+                table_in.read((char *) &ParkContent[i], sizeof(struct structs::PC));
+                ParkContent[i].out(i);
+            }
+            std::cout << std::endl;
+            delete[] ParkContent;
+            table_in.close();
+            if (table_in.is_open() != 0) {
+                std::cout
+                        << "Cannot close file\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
+                exit(1);                                    // завершаем программу с кодом 1
+            }
+        } else {
+            std::cout << "Cannot open file.\n";
+            exit(1);
+        }
+    } catch (std::exception e) { // Обработка исключения, связанного с выделением динамической памяти
+        perror("Memory allocation error");
+    }
+    return n;
 }

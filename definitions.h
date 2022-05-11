@@ -4,12 +4,14 @@
 
 /* Объявление констант */
 const int SCREEN_WIDTH  = 112; // Ширина окна терминала
-const int SCREEN_HEIGHT = 40; // Высота окна терминала
+const int SCREEN_HEIGHT = 42; // Высота окна терминала
 const int LOGO_LEN      = 10; // Количество строк в логотипе программы
 const int LOGO_WIDTH    = 60; // Ширина логотипа программы (символов)
 const int KEY_BUF_LEN   = 10; // Размер буфера для обработки ввода управляющих клавиш с клавиатуры
-const int START_ROW     = 6;
+const int START_ROW     = 6 + LOGO_LEN;
 const int START_COL     = 7;
+const int START_ROW_FR  = 12;
+const int START_COL_FR  = 6;
 const int STEP_COL      = 17;
 const int STEP_ROW      = 3;
 const int BLOCK_WIDTH   = 18;
