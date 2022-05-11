@@ -33,6 +33,13 @@ int CorrectSyntax(int argc, char* argv[]);
 
 void RaiseSyntaxError(int reason);
 
-void CreateTable(char* argv[]);
+int CreateTable(char* argv[]);
 
-std::array<int,2> PrintTable(char* argv[]);
+void InitTable(char *argv[], struct PC ParkContent[], int rows);
+
+void PrintTable(struct PC ParkContent[], int max, int current);
+
+std::array<int, 2> ReadTableData(char *argv[]);
+
+void ViewTable(char* argv[], int current_page = 0);
+

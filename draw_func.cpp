@@ -30,15 +30,6 @@ void CustomizeTerminal(std::string font, std::string back){
     clear_screen();
 }
 
-void DrawHead(){
-    std::string head[] = {"N","CPU Type","CPU Freq. (MHz)","Memory (MB)","Storage (GB)",
-                          "Display"};
-    for(int i=START_COL, j=0; i < (BLOCK_WIDTH-1)*TABLE_COLS+START_COL; i+=(STEP_COL), j++){
-        move_cursor(13, i);
-        std::cout << head[j];
-    }
-}
-
 void DrawStartBlock(){
     std::cout << "┌────────────────┐";
     move_left(BLOCK_WIDTH);
@@ -88,4 +79,20 @@ void DrawFrame(int rows){
         move_start_down(3);
         move_right(5);
     }
+}
+
+void DrawHead(){
+    std::string head[] = {"N","CPU Type","CPU Freq. (MHz)","Memory (MB)","Storage (GB)",
+                          "Display"};
+    bright_on();
+    for(int i=START_COL, j=0; i < (BLOCK_WIDTH-1)*TABLE_COLS+START_COL; i+=(STEP_COL), j++){
+        move_cursor(START_ROW_HEAD, i);
+        std::cout << head[j];
+    }
+    bright_off();
+}
+
+void DrawTable(){
+    DrawFrame(MAX_ROWS_FR);
+    DrawHead();
 }

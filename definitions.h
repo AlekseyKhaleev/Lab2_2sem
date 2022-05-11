@@ -3,21 +3,23 @@
 #pragma once
 
 /* Объявление констант */
-const int SCREEN_WIDTH  = 112; // Ширина окна терминала
-const int SCREEN_HEIGHT = 42; // Высота окна терминала
-const int LOGO_LEN      = 10; // Количество строк в логотипе программы
-const int LOGO_WIDTH    = 60; // Ширина логотипа программы (символов)
-const int KEY_BUF_LEN   = 10; // Размер буфера для обработки ввода управляющих клавиш с клавиатуры
-const int START_ROW     = 6 + LOGO_LEN;
-const int START_COL     = 7;
-const int START_ROW_FR  = 12;
-const int START_COL_FR  = 6;
-const int STEP_COL      = 17;
-const int STEP_ROW      = 3;
-const int BLOCK_WIDTH   = 18;
-const int BLOCK_HEIGHT  = 3;
-const int TABLE_COLS    = 6;
-const int STRLEN        = 80;
+const int SCREEN_WIDTH   = 112; // Ширина окна терминала
+const int SCREEN_HEIGHT  = 42; // Высота окна терминала
+const int LOGO_LEN       = 10; // Количество строк в логотипе программы
+const int LOGO_WIDTH     = 60; // Ширина логотипа программы (символов)
+const int KEY_BUF_LEN    = 10; // Размер буфера для обработки ввода управляющих клавиш с клавиатуры
+const int START_ROW      = 5 + LOGO_LEN;
+const int START_COL      = 7;
+const int MAX_ROWS       = 7;
+const int START_ROW_FR   = 11;
+const int START_COL_FR   = 6;
+const int MAX_ROWS_FR    = 8;
+const int START_ROW_HEAD = 12;
+const int STEP_COL       = 17;
+const int STEP_ROW       = 3;
+const int BLOCK_WIDTH    = 18;
+const int TABLE_COLS     = 6;
+const int STRLEN         = 80;
 const unsigned long CORRECT_BIT   = 1598745732109853234;
 
 
@@ -65,7 +67,12 @@ const unsigned long CORRECT_BIT   = 1598745732109853234;
 #define transfer()              std::cout << ESC "[?7h"
 
 /* Сброс цветовых настроек терминала */
-#define resetcolor()                        std::cout << ESC "[0m"
+#define resetcolor()            std::cout << ESC "[0m"
+
+#define bright_on()                std::cout << ESC "[1m"
+#define bright_on_text             "\x1B[1m\n"
+#define bright_off()               std::cout << ESC "[22m"
+#define bright_off_text            "\x1B[22m\n"
 
 /* Установить цвета текста(f_color) и фона (b_color) */
 #define set_display_atrib(f_color, b_color) std::cout << ESC "[" << (f_color) << ';' << (b_color) << "m"

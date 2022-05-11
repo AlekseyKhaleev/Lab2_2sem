@@ -43,19 +43,21 @@ void PrintHeader(char *argv[]) {
             "***********************************************************\n",
             "\n"};
 
+    bright_on();
     size_t left_bord = (SCREEN_WIDTH - LOGO_WIDTH) / 2.;   // Вычисление левой границы выводимого текста
     for (auto &i: logo) {                         // Обход массива строк логотипа программы
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
         std::cout << i;                                    // Вывод очередной строки логотипа программы
     }
+    bright_off();
     move_start_down(1);
     if (std::string(argv[1]) == "-r") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "The data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+        std::cout << "       The data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
     }
     if (std::string(argv[1]) == "-c") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "Please enter the data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+        std::cout << "      Please enter the data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
     }
 }
 
@@ -78,20 +80,23 @@ void PrintFooter(char *argv[], std::array<int, 2> rows, std::string reason) {
     /***********************************************************************************************************/
 
     size_t left_bord = (SCREEN_WIDTH - LOGO_WIDTH) / 2.;   // Вычисление левой границы выводимого текста
-    move_start_down(2);
+    to_end();
+    move_up(5);
     if (std::string(argv[1]) == "-r") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "The PC-park table was initialized successfully.\n\n";
+        std::cout << "    The PC-park table was initialized successfully.\n\n";
         std::cout << std::setw(left_bord) << "";
-        std::cout << "Loaded " + std::to_string(rows[0]) + " of " + std::to_string(rows[1]) + " lines\n\n";
+        std::cout << "                 Loaded " + std::to_string(rows[0]) + " of " + std::to_string(rows[1]) + " lines\n\n";
     }
     if (std::string(argv[1]) == "-c") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "The creation of the PC-park table is now complete.\n\n";
+        std::cout << "    The creation of the PC-park table is now complete.\n\n";
     }
-    to_end();
+
+    bright_on();
     std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-    PrintQuickHelp(reason);      // Вывод очередной строки логотипа программы
+    PrintQuickHelp(reason);                            // Вывод очередной строки логотипа программы
+    bright_off();
 }
 
 void PrintHelpScreen(const std::string &reason) {
@@ -117,10 +122,12 @@ void PrintHelpScreen(const std::string &reason) {
 
     /* Массив строк, содержащих справочную информацию о работе программы */
     std::string help_screen[] =
-            {"\n",
-             "Lab2 is a table reader/constructor, made by Khaleev Aleksey\n\n",
-             "This app will help you create and view tables containing\n",
-             "the characteristics of your fleet of PC's\n\n",
+            {
+             bright_on_text,
+             "      Lab2 is a table reader/constructor, made by Khaleev Aleksey\n\n",
+             "       This app will help you create and view tables containing\n",
+             "             the characteristics of your fleet of PC's\n",
+             bright_off_text,
              "Correct arguments for run this app must be like:\n\n",
              "        --help or -h : help mode\n",
              "        -с [N] [file_name] : create spreadsheet mode\n",
@@ -130,8 +137,10 @@ void PrintHelpScreen(const std::string &reason) {
              "Example1: /home/username/Lab1   -h\n",
              "Example2: /home/username/Lab1   --help\n",
              "Example3: /home/username/Lab1   -c 10 my_table\n",
-             "Example4: /home/username/Lab1   -r 5 my_table\n\n",
-             "                             IMPORTANT!\n",
+             "Example4: /home/username/Lab1   -r 5 my_table\n",
+             bright_on_text,
+             "                             IMPORTANT!",
+             bright_off_text,
              " Keep in mind that to start the program correctly in create or read mode\n",
              "you must correctly specify the number of rows of the future table:\n",
              "- if the specified number of rows is not positive ( N <= 0),\n",
@@ -142,9 +151,12 @@ void PrintHelpScreen(const std::string &reason) {
              "- if the specified number of lines in read mode is more than contained\n",
              "in the specified file, all lines contained in the file will be shown. \n\n",
              "This program conclude few hot-keys for control application in -c/-r mode:\n\n",
-             "Esc      - exit program\n",
-             "h        - view help page\n",
-             "r        - return to program interface\n\n"};
+             "Esc        - exit program\n",
+             "h          - view help page\n",
+             "r          - return to program interface\n",
+             "Up arrow   - scroll table up\n",
+             "Down arrow - scroll table down\n\n"};
+
     set_display_atrib(F_BLACK, B_WHITE);                    // Изменение настроек цветовой палитры терминала
 
     /* Перевод курсора в верхний левый угол, очистка экрана, очистка буфера прокрутки и заполнение фона */
@@ -155,13 +167,13 @@ void PrintHelpScreen(const std::string &reason) {
         std::cout << std::setw(left_bord) << "";            // Центрирование вывода
         std::cout << i;                                     // Вывод очередной справочной строки
     }
-    to_end();                                               // Перевод курсора в начало последней строки
+    bright_on();
     std::cout << std::setw(left_bord) << "";// Центрирование вывода
     PrintQuickHelp(reason); // Вывод минимальной справки о возможных действиях
-    set_display_atrib(F_GREY, B_BLACK);                     // Применение программных настроек цветовой палитры
+    bright_off();
 }
 
-void PrintQuickHelp(const std::string& reason){
+void PrintQuickHelp(const std::string &reason) {
     // Цель: Вывод строки минимальной справки в зависимости от причины вызова.
     // Исходные данные:
     //      reason - строка-ключ для передачи в качестве аргумента в модуль PrintHelp() для вывода короткой справки
@@ -184,15 +196,15 @@ void PrintQuickHelp(const std::string& reason){
     /***********************************************************************************************************/
 
     /* Инициализация ассоциативного контейнера choice_map */
-    std::map <std::string, std::string> choice_map{
+    std::map<std::string, std::string> choice_map{
             /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
-            {"help_arg", "                 Press Esc for exit"},
+            {"help_arg",  "                 Press Esc for exit"},
             /* Строка справки для экрана, формируемого в режиме прокрутки содержимого файла */
-            {"text", "            Press Esc for exit or h for help"},
+            {"text",      "            Press Esc for exit or h for help"},
             /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
             {"help_prog", "            Press Esc for exit or r for return to text"}
     };
-    if (choice_map.find(reason) != choice_map.end()){ // Если в переменную reason передан корректный аргумент
+    if (choice_map.find(reason) != choice_map.end()) { // Если в переменную reason передан корректный аргумент
         set_display_atrib(F_BLACK, B_WHITE);             // Изменение цветовых параметров терминала
         std::cout << choice_map[reason];                 // Вывод минимальной справочной информации
         set_display_atrib(F_GREY, B_BLACK);              // Восстановление программных цветовых параметров терминала
@@ -374,14 +386,14 @@ int CorrectSyntax(int argc, char *argv[]) {
 }
 
 void RaiseSyntaxError(int reason) {
-    std::map <int, std::string> choice_map{
+    std::map<int, std::string> choice_map{
             /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
             {-1, "\n Wrong number or type of arguments.\nAmong other things, check your keyboard layout\n"},
             /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
-            {1,"\n The specified file is empty\n"},
-            {2,"\n The specified file was not created in this program\n"},
-            {3,"\n The specified number of lines cannot be less than or equal to zero\n"},
-            {4,"\n Unable to open or create specified file\nCheck that the specified file exists\n"}
+            {1,  "\n The specified file is empty\n"},
+            {2,  "\n The specified file was not created in this program\n"},
+            {3,  "\n The specified number of lines cannot be less than or equal to zero\n"},
+            {4,  "\n Unable to open or create specified file\nCheck that the specified file exists\n"}
     };
     std::cout << choice_map[reason] << std::endl;
     std::string error_msg[] = {
@@ -402,22 +414,32 @@ void RaiseSyntaxError(int reason) {
     }
 }
 
-void CreateTable(char *argv[]) {
+int CreateTable(char *argv[]) {
+    CustomizeTerminal(F_BLACK, B_WHITE);
+    PrintHeader(argv);
+    DrawTable();
     errno = 0;  // Переменная модуля errno.h, хранящая целочисленный код последней ошибки. 0 - отсутствие ошибок
-    std::set_new_handler(
-            NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
+    std::set_new_handler(NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
+    int current_page = 1;
     try {
         std::ofstream table_out(argv[3], std::ios::out | std::ios::binary);
         if (table_out.is_open()) {
             int n = std::stoi(argv[2]);
             table_out.write((char *) &CORRECT_BIT, sizeof(CORRECT_BIT));
             table_out.write((char *) &n, sizeof(int));
-            auto ParkUpdate = new structs::PC[n];
-            DrawFrame(n + 1);
-            DrawHead();
+            auto ParkUpdate = new PC[n];
             for (int i = 0; i < n; i++) {
-                ParkUpdate[i].set(i);
-                table_out.write((char *) &ParkUpdate[i], sizeof(struct structs::PC));
+                if (i < MAX_ROWS) {
+                    ParkUpdate[i].set(i, i);
+                    table_out.write((char *) &ParkUpdate[i], sizeof(struct PC));
+                } else
+                {
+                    DrawTable();
+                    PrintTable(ParkUpdate, i-1,current_page);
+                    ParkUpdate[i].set(i, MAX_ROWS - 1);
+                    table_out.write((char *) &ParkUpdate[i], sizeof(struct PC));
+                    current_page++;
+                }
             }
             std::cout << std::endl;
             delete[] ParkUpdate;
@@ -433,40 +455,126 @@ void CreateTable(char *argv[]) {
     } catch (std::exception e) { // Обработка исключения, связанного с выделением динамической памяти
         perror("Memory allocation error");
     }
+    current_page--;
+    return current_page;
 }
 
-std::array<int, 2> PrintTable(char *argv[]) {
-    std::array<int, 2> n{std::stoi(argv[2]),-1};
-    errno = 0;  // Переменная модуля errno.h, хранящая целочисленный код последней ошибки. 0 - отсутствие ошибок
-    std::set_new_handler(
-            NewError); // Назначение функции, которая будет вызвана при получении ошибки выделения памяти
-    try {
-        std::ifstream table_in(argv[3], std::ios::in | std::ios::binary);
-        if (table_in.is_open()) {
-            table_in.seekg(sizeof(CORRECT_BIT));
-            table_in.read((char *) &n[1], sizeof(int));
-            if (n[0] > n[1]) n[0] = n[1];
-            auto ParkContent = new structs::PC[n[0]];
-            DrawFrame(n[0] + 1);
-            DrawHead();
-            for (int i = 0; i < n[0]; i++) {
-                table_in.read((char *) &ParkContent[i], sizeof(struct structs::PC));
-                ParkContent[i].out(i);
-            }
-            std::cout << std::endl;
-            delete[] ParkContent;
-            table_in.close();
-            if (table_in.is_open() != 0) {
-                std::cout
-                        << "Cannot close file\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
-                exit(1);                                    // завершаем программу с кодом 1
-            }
-        } else {
-            std::cout << "Cannot open file.\n";
-            exit(1);
+std::array<int, 2> ReadTableData(char *argv[]) {
+    std::array<int, 2> n{std::stoi(argv[2]), -1};
+    std::ifstream table_in(argv[3], std::ios::in | std::ios::binary);
+    if (table_in.is_open()) {
+        table_in.seekg(sizeof(CORRECT_BIT));
+        table_in.read((char *) &n[1], sizeof(int));
+        if (n[0] > n[1]) n[0] = n[1];
+        table_in.close();
+        if (table_in.is_open() != 0) {
+            std::cout
+                    << "Cannot close file\n";            // Если файл не закрыт корректно выводим сообщение ошибке и
+            exit(1);                                    // завершаем программу с кодом 1
         }
-    } catch (std::exception e) { // Обработка исключения, связанного с выделением динамической памяти
-        perror("Memory allocation error");
+    } else {
+        std::cout << "Cannot open file.\n";
+        exit(1);
     }
     return n;
+}
+
+void InitTable(char *argv[], struct PC ParkContent[], int rows) {
+    std::ifstream table_in(argv[3], std::ios::in | std::ios::binary);
+    if (table_in.is_open()) {
+        table_in.seekg(sizeof(CORRECT_BIT) + sizeof(int));
+        for (int i = 0; i < rows; i++) {
+            table_in.read((char *) &ParkContent[i], sizeof(struct PC));
+        }
+        table_in.close();
+        if (table_in.is_open() != 0) {
+            std::cout << "Cannot close file\n";            // Если файл не закрыт корректно выводим сообщение ошибке
+            exit(1);                                // и завершаем программу с кодом 1
+        }
+    } else {
+        std::cout << "Cannot open file.\n";
+        exit(1);
+    }
+}
+
+void PrintTable(struct PC ParkContent[], int max, int current) {
+    int value = max > MAX_ROWS? MAX_ROWS: max;
+    for (int i =0, j=current; i < value; i++, j++){
+        ParkContent[j].out(i);
+    }
+}
+
+void ViewTable(char* argv[], int current_page){
+    std::array<int, 2> printed_rows = ReadTableData(argv);
+    int n = printed_rows[0];
+    auto *ParkContent = new PC[n];
+    InitTable(argv, ParkContent, n);
+    CustomizeTerminal(F_BLACK, B_WHITE);
+    PrintHeader(argv);
+    DrawTable();
+    PrintTable(ParkContent, n,current_page);
+    PrintFooter(argv, printed_rows);
+    int mark = true; // флаг-индикатор продолжения/завершения программы
+    while (mark) { // бесконечный цикл считывания клавиш
+        switch (UserKey()) { // считывание кода клавиши введенной пользователем в режиме "реального времени"
+            /* Клавиша ESC завершит цикл считывания клавиш */
+            case Escape: {
+                mark = false;
+                break;
+            }
+            case Up: {
+                if (current_page > 0) {
+                    current_page--;
+                    CustomizeTerminal(F_BLACK, B_WHITE);
+                    PrintHeader(argv);
+                    DrawTable();
+                    PrintTable(ParkContent, n,current_page);
+                    PrintFooter(argv, printed_rows);
+                }
+                break;
+            }
+            case Down: {
+                if ((current_page <= n - MAX_ROWS_FR) && (n > MAX_ROWS_FR)) {
+                    current_page++;
+                    CustomizeTerminal(F_BLACK, B_WHITE);
+                    PrintHeader(argv);
+                    DrawTable();
+                    PrintTable(ParkContent, n, current_page);
+                    PrintFooter(argv, printed_rows);
+                }
+                break;
+            }
+            case Help: {
+                PrintHelpScreen("help_prog"); // Вывод справочного экрана
+                int h_mark = true; // флаг-индикатор продолжения/завершения показа справочного экрана
+                while (h_mark) { // бесконечный цикл считывания клавиш
+                    switch (UserKey()) { // считывание кода клавиши введенной пользователем в режиме "реального времени"
+
+                        /* Клавиша ESC завершит цикл считывания клавиш как в режиме справки, так и в основном цикле
+                         * и приведет в последствии к завершению программы*/
+                        case Escape: {
+                            h_mark = false;
+                            mark = false;
+                            break;
+                        }
+                            /* Клавиша r завершит цикл считывания клавиш в режиме справки, просмотр текста продолжится
+                             * с экрана на котором была вызвана справка */
+                        case Return: {
+                            CustomizeTerminal(F_BLACK, B_WHITE);
+                            PrintHeader(argv);
+                            DrawTable();
+                            PrintTable(ParkContent, n, current_page);
+                            PrintFooter(argv, printed_rows);
+                            h_mark = false;
+                            break;
+                        }
+                        default:
+                            break;  // игнорирование любых клавиш, поведение которых неопределено
+                    }
+                }
+                break;
+            }
+        }
+    }
+    delete[] ParkContent;
 }
