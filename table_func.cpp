@@ -47,7 +47,6 @@ int CreateTable(char *argv[], std::fstream &table_out, int rows_request) {
         perror("Memory allocation error");
     }
     row_number--;
-    table_out.seekg(std::ios::beg);
     return row_number;
 }
 
@@ -60,7 +59,8 @@ void ViewTable(char *argv[], std::fstream &table_in, int rows_request, int row_n
 
         /* Действительное количество строк */
         int real_rows;
-        table_in.read((char *) &real_rows, sizeof(real_rows));
+        table_in.seekg(sizeof(CORRECT_BIT));
+        table_in.read((char *) &real_rows, sizeof(int));
         int rows_to_print = rows_request < real_rows? rows_request:real_rows;
         auto *ParkContent = new PC[rows_to_print];
         for (int i = 0; i < rows_to_print; i++) {

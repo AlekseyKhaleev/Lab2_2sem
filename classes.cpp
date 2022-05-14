@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-void SyntaxException::description(int type){
+void SyntaxException::description(int type, int argc){
     std::string error_msg[] = {
             "Correct arguments for run this app:\n\n",
             "--help or -h : help mode\n",
@@ -12,7 +12,7 @@ void SyntaxException::description(int type){
             "N – the number of records;\n",
             "file_name – file name or full path to save/read the table;\n\n"
     };
-    std::cout << "\nSyntax Exception Type " << type << " :\n" << what() << "\n\n";
+    std::cout << "\nSyntax Exception Type " << type << " : " << argc - 1 << " arguments given.\n" << what() << "\n\n";
     for (auto &i: error_msg) {
         std::cout << i;
     }

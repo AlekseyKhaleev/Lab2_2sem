@@ -9,13 +9,11 @@
 class SyntaxException : public ::std::runtime_error {
 public:
     explicit
-    SyntaxException(const char* message, int value) : runtime_error{message} {
-        this->error_type=value;
-        this->description(error_type);
+    SyntaxException(const char* message, int value, int argc) : runtime_error{message} {
+        this->description(value, argc);
     }
 
 private:
-    int error_type;
-    void description(int type);
+    void description(int type, int argc);
 };
 

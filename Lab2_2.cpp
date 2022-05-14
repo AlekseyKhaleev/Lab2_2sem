@@ -46,28 +46,31 @@ int main(int argc, char **argv) {
     try {
         switch (argc) {
             case 2: {
+
                 if (std::string(argv[1]) == "-h" || std::string(argv[1]) == "--help") {
                     RaiseHelpScreen("help_arg"); // Запуск программы в режиме справки
-                }
+                } else
+                    throw SyntaxException("First argument is wrong. Among other things, check your keyboard layout", 1,
+                                          argc);
                 break;
             }
             case 4: {
                 int rows_request;
                 try {
                     rows_request = std::stoi(argv[2]);
-                } catch (std::invalid_argument &stoi_err) {
-                    throw SyntaxException(" The specified number of lines must be an integer", 1);
+                } catch (std::exception &stoi_err) {
+                    throw SyntaxException("The specified number of lines must be an integer", 2, argc);
                 }
                 if (rows_request < 0) {
                     /* Пользователь захотел ввести/прочитать 0 строк */
                     throw SyntaxException(
-                            " The specified number of lines can't be less than or equal to zero", 2);
+                            "The specified number of lines can't be less than or equal to zero", 3, argc);
                 }
                 if (argv[2] != std::to_string(rows_request)) {
                     /* Пользователь захотел ввести/прочитать не целое количество строк */
                     throw SyntaxException(
-                            " It is not possible to use a floating point number to specify the number of lines\n"
-                            " You should also use only digits for an integer", 3);
+                            "It is not possible to use a floating point number to specify the number of lines\n"
+                            "You should also use only digits for an integer", 4, argc);
                 } else
                     /* если количество строк целое и больше нуля */
                 {
@@ -82,8 +85,8 @@ int main(int argc, char **argv) {
                             std::fstream table_in(argv[3], std::ios::in | std::ios::binary);
                             if (!table_in.is_open()) {
                                 throw SyntaxException(
-                                        " Unable to open or create specified file"
-                                        "\n  Check that the specified file exists", 4);
+                                        "Unable to open or create specified file. Check that the specified file exists",
+                                        5, argc);
                             } else
                                 /* Если файл открыт успешно, продолжаем работу с его содержимым */
                             {
@@ -91,7 +94,7 @@ int main(int argc, char **argv) {
                                 table_in.seekg(0, std::ios::end);
                                 long file_size = table_in.tellg();
                                 if (file_size == 0) {  // если файл пустой
-                                    throw SyntaxException(" The specified file is empty", 5);
+                                    throw SyntaxException("The specified file is empty", 6, argc);
                                 } else {
                                     table_in.seekg(std::ios::beg);
                                     table_in.read((char *) &file_bit, sizeof(CORRECT_BIT));
@@ -99,30 +102,29 @@ int main(int argc, char **argv) {
                                         ViewTable(argv, table_in, rows_request);
                                     } else {
                                         throw SyntaxException(
-                                                " The specified file was not created in this program", 6);
+                                                "The specified file was not created in this program", 7, argc);
                                     }
                                 }
                                 table_in.close();
                                 if (table_in.is_open()) {
-                                    throw SyntaxException(" Unable to close specified file", 7);
+                                    throw SyntaxException("Unable to close specified file", 8, argc);
                                 }
                             }
                             break;
                         }
                         case 2: { //пишем
-                            std::fstream table_out(argv[3], std::ios::in | std::ios::out | std::ios::binary);
+                            std::fstream table_out(argv[3], std::ios::trunc|std::ios::in | std::ios::out | std::ios::binary);
                             /* Если файл открыт успешно, продолжаем работу с его содержимым */
                             if (!table_out.is_open()) {
                                 throw SyntaxException(
-                                        " Unable to open or create specified file"
-                                        "  Check that the specified file exists", 4);
+                                        "Unable to open or create specified file. Check that the specified file exists",
+                                        5, argc);
                             } else {
                                 int row_number = CreateTable(argv, table_out, rows_request);
                                 ViewTable(argv, table_out, rows_request, row_number);
-
                                 table_out.close();
                                 if (table_out.is_open()) {
-                                    throw SyntaxException(" Unable to close specified file", 7);
+                                    throw SyntaxException("Unable to close specified file", 8, argc);
 
                                 }
                                 break; // конец записи
@@ -130,14 +132,15 @@ int main(int argc, char **argv) {
                         }
                         default: {
                             throw SyntaxException(
-                                    " First argument is wrong. Among other things, check your keyboard layout", 8);
+                                    "First argument is wrong. Among other things, check your keyboard layout", 1,
+                                    argc);
                         }
                     }
                     break; // конец обработки режима запуска (первый аргумент)
                 }
                 default: {
                     throw SyntaxException(
-                            " Wrong number of arguments", 9);
+                            "Wrong number of arguments", 9, argc);
                     break; // конец обработки количества полученных аргументов
                 }
             }

@@ -1,0 +1,29 @@
+#!/bin/bash
+clear
+#Test 1 - no arguments:
+echo "*******************************************************************************"
+echo "                                   Test 1"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2"
+echo "*******************************************************************************"
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2
+
+#Test 2 - unexpected arguments:
+echo "*******************************************************************************"
+echo "                                   Test 2"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o --openmode 123"
+echo "*******************************************************************************"
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o --openmode 123
+
+#Test 3 - create mode:
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 1 test_file
+echo "*******************************************************************************"
+echo "                                   Test 3: done"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 1 test_file"
+echo "*******************************************************************************"
+
+
+
+
