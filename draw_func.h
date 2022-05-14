@@ -5,7 +5,7 @@
 #include <string>
 
 /* Изменение параметров терминала в для корректной работы программы в соответствии с заданием */
-void CustomizeTerminal(std::string font, std::string back);
+void CustomizeTerminal(const std::string& font, const std::string& back);
 
 void DrawStartBlock();
 
