@@ -36,7 +36,7 @@ int CreateTable(char *argv[], std::fstream &table_out, int rows_request) {
             } else {
                 DrawTable();
                 PrintTable(ParkUpdate, i - 1, row_number);
-                ParkUpdate[i].set(i, MAX_ROWS - 1);
+                ParkUpdate[i].set(i+1, MAX_ROWS - 1);
                 table_out.write((char *) &ParkUpdate[i], sizeof(struct PC));
                 row_number++;
             }

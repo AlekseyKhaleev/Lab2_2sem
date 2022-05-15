@@ -17,9 +17,6 @@ void PrintQuickHelp(const std::string& reason);
 /* Формирование и вывод справочного экрана в окно терминала */
 void PrintHelpScreen(const std::string& reason);
 
-/* Аварийное завершение программы с предварительным выводом справочной информации */
-void RaiseHelpScreen(const std::string& reason);
-
 /* Считывание кода нажатой клавиши в терминале без промежуточной буферизации */
 int UserKey();
 

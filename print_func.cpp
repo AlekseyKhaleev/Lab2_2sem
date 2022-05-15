@@ -34,7 +34,7 @@ void PrintHeader(char *argv[]) {
     ****************************************************************************************************************/
 
     /* Массив строк соответствующих содержимому логотипа программы */
-    std::string logo[LOGO_LEN] = {
+    const std::string logo[] = {
             "\n",
             "***********************************************************\n",
             "* Nizhniy Novgorod Technical University                   *\n",
@@ -53,11 +53,11 @@ void PrintHeader(char *argv[]) {
     move_start_down(1);
     if (std::string(argv[1]) == "-r") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "       The data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+        std::cout << "The data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
     }
     if (std::string(argv[1]) == "-c") {
         std::cout << std::setw(left_bord) << "";           // Центрирование вывода
-        std::cout << "      Please enter the data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
+        std::cout << "Enter the data of the PC-park in the \"" + std::string(argv[3]) + "\" table: \n";
     }
 }
 
@@ -126,7 +126,7 @@ void PrintQuickHelp(const std::string &reason) {
     /* Инициализация ассоциативного контейнера choice_map */
     std::map<std::string, std::string> choice_map{
             /* Строка справки для экрана, формируемого в случае некорректного запуска программы */
-            {"help_arg",  "                 Press Esc for exit"},
+            {"help_arg",  "                         Press Esc for exit"},
             /* Строка справки для экрана, формируемого в режиме прокрутки содержимого файла */
             {"text",      "            Press Esc for exit or h for help"},
             /* Строка справки для экрана, формируемого в режиме отображения справочного экрана */
@@ -213,38 +213,6 @@ void PrintHelpScreen(const std::string &reason) {
     std::cout << std::setw(left_bord) << "";// Центрирование вывода
     PrintQuickHelp(reason); // Вывод минимальной справки о возможных действиях
     bright_off();
-}
-
-void RaiseHelpScreen(const std::string &reason) {
-    /****************************************************************************************************************
-    * Цель: Аварийное завершение программы с предварительным выводом справочной информации.
-    * Исходные данные:
-    * Результат: Пользователь ознакомлен со справочной информацией, программа завершена с кодом 1
-    * Вызываемые модули: <stdlib.h>, PrintHelpScreen(), UserKey(), EndScreen()
-    * Описание алгоритма:
-    * 1) В окно терминала выводится справочная информация с помощью функции PrintHelpScreen() c аргументом "error".
-    * 2) Модуль поддерживает одну "горячую" клавишу - Esc для завершения программы.
-    * 3) После получения команды завершения производится очистка экрана и восстановление исходных параметров цветовой
-    * палитры терминала с помощью функции EndScreen().
-    * 4) Программа завершается с кодом 1 с помощью вызова функции exit(1).
-    * Дата: 2022 / 03 / 09 Версия 1.01
-    * Автор: Студент НГТУ ИРИТ, Халеев А. А. гр. 21-ИВТз
-    * Исправления: нет
-    ******************************************************************************************************************/
-    CustomizeTerminal(F_BLACK, B_WHITE);
-    PrintHelpScreen(reason);
-    bool mark = true;
-    while (mark) {
-        switch (UserKey()) {
-            case Escape:
-                mark = false;
-                break;
-            default:
-                break;
-        }
-    }
-    reset_screen();
-    exit(1);
 }
 
 int UserKey() {

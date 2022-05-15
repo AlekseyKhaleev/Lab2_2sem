@@ -5,10 +5,9 @@
 /* Объявление констант */
 const int SCREEN_WIDTH   = 112; // Ширина окна терминала
 const int SCREEN_HEIGHT  = 42; // Высота окна терминала
-const int LOGO_LEN       = 10; // Количество строк в логотипе программы
 const int LOGO_WIDTH     = 60; // Ширина логотипа программы (символов)
 const int KEY_BUF_LEN    = 10; // Размер буфера для обработки ввода управляющих клавиш с клавиатуры
-const int START_ROW      = 5 + LOGO_LEN;
+const int START_ROW      = 15;
 const int START_COL      = 7;
 const int MAX_ROWS       = 7;
 const int START_ROW_FR   = 11;
@@ -54,20 +53,8 @@ const unsigned long CORRECT_BIT   = 1598745732109853234;
 /* Переместить курсор в левый верхний угол, очистить экран и буфер прокрутки, фон заполняется соответствующим цветом*/
 #define clear_screen()          home(); std::cout << ESC "[2J" << ESC "[3J"
 
-/* Переместить курсор в положение, соответствующее началу вывода содержимого файла, очистить текст и буфер прокрутки */
-#define clear_file()            file_home(); std::cout << ESC "[J" << ESC "[3J"
-
 /* Сброс всех настроек терминала в значения по умолчанию */
 #define reset_screen()          std::cout << ESC "c"
-
-/* Отключить авто-перенос строк (обрезать строки)*/
-#define cut()                   std::cout << ESC "[?7l"
-
-/* Включить авто-перенос строк */
-#define transfer()              std::cout << ESC "[?7h"
-
-/* Сброс цветовых настроек терминала */
-#define resetcolor()            std::cout << ESC "[0m"
 
 #define bright_on()                std::cout << ESC "[1m"
 #define bright_on_text             "\x1B[1m\n"

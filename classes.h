@@ -8,12 +8,15 @@
 
 class SyntaxException : public ::std::runtime_error {
 public:
+    void description();
     explicit
-    SyntaxException(const char* message, int value, int argc) : runtime_error{message} {
-        this->description(value, argc);
+    SyntaxException(const char* message, int type, int argc) : runtime_error{message} {
+        this ->type=type;
+        this ->argc=argc;
     }
 
 private:
-    void description(int type, int argc);
+    int type;
+    int argc;
 };
 

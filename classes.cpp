@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-void SyntaxException::description(int type, int argc){
+void SyntaxException::description(){
     std::string error_msg[] = {
             "Correct arguments for run this app:\n\n",
             "--help or -h : help mode\n",

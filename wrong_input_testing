@@ -1,0 +1,104 @@
+#!/bin/bash
+touch wrong_input_testing.log
+clear
+(
+#Test 1 - unexpected arguments:
+echo "********************************************************************************"
+echo "                      Test 1: [N] integer, but 1st argument unexpected"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o 12 test_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o 12 test_file
+
+#Test 2 - unexpected arguments:
+echo "********************************************************************************"
+echo "                         Test 2: [N] argument not an integer"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o qweqwe 123"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -o openmode 123
+
+#Test 3 - unexpected arguments:
+echo "********************************************************************************"
+echo "                  Test 3: [N] argument less then or equal to 0"
+echo "********************************************************************************"
+echo " 3.1) Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c -123 test_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c -123 test_file
+echo "********************************************************************************"
+echo " 3.2) Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 0 test_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 0 test_file
+
+#Test 4 - [N] is float
+echo "********************************************************************************"
+echo "                      Test 4: [N] is floating point number"
+echo "********************************************************************************"
+echo " 4.1) Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 3.2 test_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 3.2 test_file
+echo "********************************************************************************"
+echo " 4.2) Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 3,2 test_file"
+echo "********************************************************************************"
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 3,2 test_file
+
+#Test 5 - unable to create or open file
+echo "********************************************************************************"
+echo "                      Test 5: Trying to open file that doesn't exist "
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 qweqweqweqw"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 qweqweqweqw
+
+#Test 6 - empty file
+echo "********************************************************************************"
+echo "                      Test 6: Trying to read empty file"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 empty_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 empty_file
+
+#Test 7 - wrong file
+echo "********************************************************************************"
+echo "           Test 7: Trying to open a file created in another application"
+echo " Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 wrong_file"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 5 wrong_file
+
+#Test 9 - wrong arguments:
+echo "********************************************************************************"
+echo "                                 Test 8: wrong number of arguments"
+echo "********************************************************************************"
+echo " 8.1) No arguments.Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2
+echo "********************************************************************************"
+echo " 8.2) To many arguments. Creating. Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 12 test_file mode"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -c 12 test_file mode
+echo " 8.3) Too many arguments. Reading. Used arguments:"
+echo " /home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 12 test_file mode"
+echo "********************************************************************************"
+echo " Terminal out: "
+/home/kristofer/2_sem_prog/Lab2_2/cmake-build-debug/Lab2_2 -r 12 test_file mode
+
+echo " Testing complete"
+echo " Results saved in wrong_input_testing.log"
+) | tee wrong_input_testing.log
