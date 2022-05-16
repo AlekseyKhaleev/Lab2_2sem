@@ -34,7 +34,7 @@
 #include "print_func.h"
 #include "draw_func.h"
 #include "table_func.h"
-#include "struct.h"
+#include "structs.h"
 #include "classes.h"
 #include <iostream>
 #include <string>
@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
     } catch (SyntaxException &ex)
     /* Если поймали собственное исключение (переданы некорректные аргументы командной строки) */
     {
-        ex.description();
+        ex.description(); // Вызываем сообщение, соответствующее ошибке с помощью метода .description()
         return 1; // Завершение программы с кодом 1
     }
     /* Перед завершением работы программы восстанавливаем исходные настройки терминала */

@@ -6,6 +6,9 @@
 /* Функция вызова исключения связанного с выделением памяти для передачи в set_new_handler() */
 void NewError();
 
+/* Считывание кода нажатой клавиши в терминале без промежуточной буферизации */
+int UserKey();
+
 int CreateTable(char *argv[], std::fstream &table_out, int rows_request);
 
 void PrintTable(struct PC ParkContent[], int rows_request, int row_number);
