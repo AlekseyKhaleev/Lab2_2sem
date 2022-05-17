@@ -5,7 +5,6 @@
 /* Подключение модулей */
 #include "table_func.h"
 #include "definitions.h"
-#include "structs.h"
 #include "print_func.h"
 #include "draw_func.h"
 #include <map>
@@ -85,6 +84,7 @@ int UserKey() {
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     return key_code; // Возвращение целочисленного кода нажатой клавиши, завершение работы модуля
 }
+
 
 void PrintTable(struct PC ParkContent[], int rows_request, int row_number) {
     /****************************************************************************************************************

@@ -52,36 +52,35 @@ build cmake_object_order_depends_target_Lab2_2: phony || CMakeFiles/Lab2_2.dir
 build CMakeFiles/Lab2_2.dir/Lab2_2.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/Lab2_2.cpp || cmake_object_order_depends_target_Lab2_2
   DEP_FILE = CMakeFiles/Lab2_2.dir/Lab2_2.cpp.o.d
   FLAGS = -g
+  INCLUDES = -I/home/kristofer/2_sem_prog/Lab2_2/structs_lib
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
 build CMakeFiles/Lab2_2.dir/print_func.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/print_func.cpp || cmake_object_order_depends_target_Lab2_2
   DEP_FILE = CMakeFiles/Lab2_2.dir/print_func.cpp.o.d
   FLAGS = -g
-  OBJECT_DIR = CMakeFiles/Lab2_2.dir
-  OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
-
-build CMakeFiles/Lab2_2.dir/structs.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/structs.cpp || cmake_object_order_depends_target_Lab2_2
-  DEP_FILE = CMakeFiles/Lab2_2.dir/structs.cpp.o.d
-  FLAGS = -g
+  INCLUDES = -I/home/kristofer/2_sem_prog/Lab2_2/structs_lib
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
 build CMakeFiles/Lab2_2.dir/draw_func.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/draw_func.cpp || cmake_object_order_depends_target_Lab2_2
   DEP_FILE = CMakeFiles/Lab2_2.dir/draw_func.cpp.o.d
   FLAGS = -g
+  INCLUDES = -I/home/kristofer/2_sem_prog/Lab2_2/structs_lib
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
 build CMakeFiles/Lab2_2.dir/table_func.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/table_func.cpp || cmake_object_order_depends_target_Lab2_2
   DEP_FILE = CMakeFiles/Lab2_2.dir/table_func.cpp.o.d
   FLAGS = -g
+  INCLUDES = -I/home/kristofer/2_sem_prog/Lab2_2/structs_lib
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
 build CMakeFiles/Lab2_2.dir/classes.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kristofer/2_sem_prog/Lab2_2/classes.cpp || cmake_object_order_depends_target_Lab2_2
   DEP_FILE = CMakeFiles/Lab2_2.dir/classes.cpp.o.d
   FLAGS = -g
+  INCLUDES = -I/home/kristofer/2_sem_prog/Lab2_2/structs_lib
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   OBJECT_FILE_DIR = CMakeFiles/Lab2_2.dir
 
@@ -93,8 +92,9 @@ build CMakeFiles/Lab2_2.dir/classes.cpp.o: CXX_COMPILER__Lab2_2_Debug /home/kris
 #############################################
 # Link the executable Lab2_2
 
-build Lab2_2: CXX_EXECUTABLE_LINKER__Lab2_2_Debug CMakeFiles/Lab2_2.dir/Lab2_2.cpp.o CMakeFiles/Lab2_2.dir/print_func.cpp.o CMakeFiles/Lab2_2.dir/structs.cpp.o CMakeFiles/Lab2_2.dir/draw_func.cpp.o CMakeFiles/Lab2_2.dir/table_func.cpp.o CMakeFiles/Lab2_2.dir/classes.cpp.o
+build Lab2_2: CXX_EXECUTABLE_LINKER__Lab2_2_Debug CMakeFiles/Lab2_2.dir/Lab2_2.cpp.o CMakeFiles/Lab2_2.dir/print_func.cpp.o CMakeFiles/Lab2_2.dir/draw_func.cpp.o CMakeFiles/Lab2_2.dir/table_func.cpp.o CMakeFiles/Lab2_2.dir/classes.cpp.o | ../structs_lib/cmake-build-debug/libstructs.a
   FLAGS = -g
+  LINK_LIBRARIES = ../structs_lib/cmake-build-debug/libstructs.a
   OBJECT_DIR = CMakeFiles/Lab2_2.dir
   POST_BUILD = :
   PRE_LINK = :

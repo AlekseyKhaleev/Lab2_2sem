@@ -34,12 +34,10 @@
 #include "print_func.h"
 #include "draw_func.h"
 #include "table_func.h"
-#include "structs.h"
 #include "classes.h"
 #include <iostream>
 #include <string>
 #include <map>
-
 
 /* Для корректной работы программы необходимо передать путь к текстовому файлу в качестве аргумента командной строки */
 int main(int argc, char **argv) {
