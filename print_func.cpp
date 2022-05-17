@@ -3,7 +3,6 @@
 ***********************************************************************************************************************/
 
 /* Подключение модулей */
-#include "structs.h"
 #include "definitions.h"
 #include "print_func.h"
 #include <iostream>
@@ -139,7 +138,6 @@ void PrintQuickHelp(const std::string &reason) {
     if (choice_map.find(reason) != choice_map.end()) { // Если в переменную reason передан корректный аргумент
         set_display_atrib(F_BLACK, B_WHITE);             // Изменение цветовых параметров терминала
         std::cout << choice_map[reason];                 // Вывод минимальной справочной информации
-        set_display_atrib(F_GREY, B_BLACK);              // Восстановление программных цветовых параметров терминала
     } else
         std::cout << "PrintHelp() error. Key '" << reason << "' not found."; // Вывод сообщения о некорректном аргументе
 }
