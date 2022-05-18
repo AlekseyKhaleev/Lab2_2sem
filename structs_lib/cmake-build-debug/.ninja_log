@@ -1,0 +1,7 @@
+# ninja log v5
+2	306	1652807586383855843	CMakeFiles/untitled.dir/library.cpp.o	e5403855a171cfd2
+364	373	1652811657936676504	libstructs.a	b99ab3f29c4b4831
+0	367	1652807657405182531	CMakeFiles/structs.dir/library.cpp.o	e08ca02c62c8dedd
+1	364	1652811657928676405	CMakeFiles/structs.dir/structs_lib.cpp.o	84438596df86a24c
+2	405	1652812981742782916	CMakeFiles/structs.dir/structs_lib.cpp.o	32780f8be64b47a4
+405	414	1652812981754783088	libstructs.a	b99ab3f29c4b4831
