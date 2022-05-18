@@ -116,7 +116,7 @@ file_name – file name or full path to save/read the table;
 
 ********************************************************************************
  4.2) Used arguments:
- ../Lab2_2 -c 3,2 test_file
+ ../cmake-build-debug/Lab2_2 -c 3,2 test_file
 ********************************************************************************
 
  Terminal out: 
@@ -139,7 +139,7 @@ file_name – file name or full path to save/read the table;
 ********************************************************************************
                       Test 5: Trying to open file that doesn't exist 
  Used arguments:
- ../Lab2_2 -r 5 qweqweqweqw
+ ../cmake-build-debug/Lab2_2 -r 5 qweqweqweqw
 ********************************************************************************
 
  Terminal out: 
@@ -161,7 +161,7 @@ file_name – file name or full path to save/read the table;
 ********************************************************************************
                       Test 6: Trying to read empty file
  Used arguments:
- ../Lab2_2 -r 5 empty_file
+ ../cmake-build-debug/Lab2_2 -r 5 empty_file
 ********************************************************************************
 
  Terminal out: 
@@ -249,7 +249,7 @@ file_name – file name or full path to save/read the table;
 
 ********************************************************************************
  8.3) Too many arguments. Reading. Used arguments:
- ../Lab2_2 -r 12 test_file mode
+ ../cmake-build-debug/Lab2_2 -r 12 test_file mode
 ********************************************************************************
 
  Terminal out: 
